@@ -268,7 +268,7 @@ public class CD {
 	
 	
 	public enum NoticeType {
-		NOTICE, EVENT, QNA;
+		NOTICE, EVENT, QNA, BANNER_ADVERTISING;
 	}
     
     public enum PushYn{

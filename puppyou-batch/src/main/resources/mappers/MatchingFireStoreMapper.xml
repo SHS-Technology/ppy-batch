@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puppyou.batch.mapper.MatchingFireStoreMapper">
+    
+	<insert id ="insertMatchingFirestore">
+		INSERT INTO matching_firestore
+		(
+			matching_no,
+			fail_reason,
+			match_status,
+			retry_cnt,
+			commit_yn,
+			create_dt,
+			update_dt
+		) VALUES (
+			#{matchingNo},
+			#{failReason},
+			#{matchStatus},
+			0,
+			'N',
+			NOW(),
+			NOW()
+		)
+	</insert>
+    
+    <select id="getFailedFirestore" resultType="com.puppyou.batch.entity.MatchingFirestore">
+    	SELECT 
+    		*
+    	FROM
+    		matching_firestore
+    	WHERE
+    		commit_yn = 'N'
+    	AND
+    		retry_cnt <![CDATA[ < ]]> 3 
+    </select>
+    
+    <select id="getFailedFirestoreCnt3" resultType="int">
+    	SELECT 
+    		COUNT(*)
+    	FROM
+    		matching_firestore
+    	WHERE
+    		commit_yn = 'N'
+    	AND
+    		retry_cnt <![CDATA[ >= ]]> 3 
+    </select>
+    
+    <update id="updateMatchingFirestore">
+    	UPDATE 
+    		matching_firestore
+		SET
+		retry_cnt = retry_cnt + 1 ,
+		commit_yn = #{commitYn},
+		update_dt = NOW()
+		WHERE matching_firestore_no = #{matchingFirestoreNo}
+    </update>
+    
+</mapper>
