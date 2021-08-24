@@ -159,7 +159,6 @@ public class MatchingServiceImpl implements MatchingService {
 					DocumentReference  docRef = db.collection("purchings").document("matchingNo_" + p.getMatchingNo());
 					ApiFuture<DocumentSnapshot> future = docRef.get();
 					DocumentSnapshot document = future.get();
-					System.out.println("###!@# : " + document.exists());
 					if(document.exists()) {
 						Map<String, Object> update = new HashMap<String, Object>();
 						update.put("matchStatus", "END");

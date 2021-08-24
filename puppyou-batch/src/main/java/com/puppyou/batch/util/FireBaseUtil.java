@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.core.io.ClassPathResource;
+
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.cloud.firestore.DocumentReference;
 import com.google.cloud.firestore.Firestore;
@@ -62,9 +64,12 @@ public class FireBaseUtil {
 	
 	@SuppressWarnings("deprecation")
 	public static Firestore connectionFireStore(String fileName) throws IOException {
-		String path = FireBaseUtil.class.getResource("").getPath();
-		InputStream serviceAccount = new FileInputStream(path + fileName);
-		GoogleCredentials credentials = GoogleCredentials.fromStream(serviceAccount);
+		ClassPathResource classPathResource = new ClassPathResource("json/" + fileName);
+		System.out.println("##path: " + classPathResource.getPath());
+//		String path = FireBaseUtil.class.getResource("").getPath();
+//		System.out.println(path);
+//		InputStream serviceAccount = new FileInputStream(classPathResource.getPath());
+		GoogleCredentials credentials = GoogleCredentials.fromStream(classPathResource.getInputStream());
 		FirebaseOptions option = new FirebaseOptions.Builder()
 		    .setCredentials(credentials)
 		    .build();
