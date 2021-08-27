@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.puppyou.batch.mapper.ShopVisitMapper">
+    
+    <select id="getVisitReviewRequestMember" resultType="map">
+    	SELECT a.visit_no AS visitNo, 
+    		a.mem_no AS memNo, 
+    		a.business_reg_no AS businessRegNo
+            from shop_visit_confirm a
+            JOIN member_info b 
+            ON b.mem_no = a.mem_no
+        WHERE NOT EXISTS
+        ( SELECT * FROM push_history 
+        	WHERE code = 'SHOP_VISIT_REVIEW_REQ' 
+        	AND code_target_no = a.visit_no)
+        AND
+    		b.notification_yn = 'Y'
+    	AND
+    		b.activation_yn = 'Y'
+        AND DATE_ADD(a.create_dt, INTERVAL 3 HOUR) <![CDATA[ <=]]> NOW()
+        AND DATE_ADD(a.create_dt, INTERVAL 4 HOUR) <![CDATA[ >= ]]> NOW()
+    </select>
+    
+</mapper>
